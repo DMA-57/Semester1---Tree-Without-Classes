@@ -1,40 +1,57 @@
-from listFunctions import *
+# Program     : NTree.py
+# Deskripsi   : Fungsi-fungsi untuk operasi list of list.
+# NIM/Nama    : xxx/Daffa Maulana Alfianto
+# Tanggal     : Rabu, 20 November 2024
+# ================================================================================================================
 
-# Membuat pohon
+from ListFunctions import * 
+
+# DEFINISI DAN SPESIFIKASI KONSTURKTOR
 def MakePN(A, PN):
     return [A, PN]  # A adalah akar, PN adalah list anak-anak
 
-# Mengambil akar dari pohon
-def Akar(P):
-    return P[0]
+# DEFINISI DAN SPESIFIKASI SELEKTOR
+def Akar(PN):
+    return PN[0]
 
-# Mengambil anak-anak dari pohon
-def Anak(P):
-    return P[1]
+def Anak(PN):
+    return PN[1]
 
-# Mengecek apakah pohon kosong
-def IsTreeEmpty(PN):
-    return PN == [] or (not Akar(PN) and IsEmpty(Anak(PN)))
+# DEFINISI DAN SPESIFIKASI PREDIKAT
 
-# Mengecek apakah pohon hanya memiliki satu elemen (akar tanpa anak)
-def IsOneElemt(PN):
-    return not IsTreeEmpty(PN) and IsEmpty(Anak(PN))
+def IsTreeNEmpty(PN):
+    return PN == []
+
+def IsOneElmt(PN):
+    return not IsTreeNEmpty(PN) and IsTreeNEmpty(Anak(PN))
 
 
-def IterateChild(x, L):
-    if IsEmpty(L):
-        return 
+def NbNElmt(PN):
+    if IsTreeNEmpty(PN):
+        return 0
+    elif IsOneElmt(PN):
+        return 1
     else:
-        if IsMemberNTree(x, FirstElmt(L)):
-            return True
-        else:
-            return IterateChild(x, Tail(L))
+        return NbNElmt(FirstElmt(Anak(PN))) + NbNElmt(MakePN(Akar(PN), Tail(Anak(PN))))
 
-# Mengecek apakah x adalah anggota dari pohon
+def NbNDaun(PN):
+    if IsTreeNEmpty(PN):
+        return 0
+    elif IsOneElmt(PN):
+        return 1
+    else:
+        return NbNDaunChild((Anak(PN)))
+
+def NbNDaunChild(PN):
+    if IsTreeNEmpty(PN):
+        return 0
+    else:
+        return NbNDaun(FirstElmt(PN)) + NbNDaunChild(Tail(PN))
+
 def IsMemberNTree(x, PN):
-    if IsTreeEmpty(PN) : 
+    if IsTreeNEmpty(PN) : 
         return False
-    elif IsOneElemt(PN):
+    elif IsOneElmt(PN):
         if Akar(PN) == x: 
             return True
         else: 
@@ -44,50 +61,22 @@ def IsMemberNTree(x, PN):
             return True
         else:
             return IsMemberNTree(x, MakePN(Akar(PN), Tail(Anak(PN))))
-        
-def Succecor(PN):
-    if IsOneElemt(PN):
-        return Akar(PN)
+      
+def Successor(PN):
+    if IsOneElmt(PN):
+        return Konso(Akar(PN))
     else:
-        
+        return Konso(Successor(FirstElmt(Anak(PN))), Successor( MakePN(Akar(PN), Tail(Anak(PN)))))
+
+T = MakePN(2,[])
+print(MakePN(2,[]))
+print(IsTreeNEmpty(T))
+print(IsOneElmt(T))
+T2 = MakePN('A', [MakePN('B',[MakePN('D',[]), MakePN('E',[]), MakePN('F',[])]), MakePN('C',[MakePN('G',[]) , MakePN('H', [MakePN('I', [])])])])
+print (T2)
+print(NbNElmt(T2))
+print (NbNDaun (T2))
 
 
 
-pohon = MakePN('D', [
-    MakePN('A', [
-        MakePN('M', [
-            MakePN('N', []),
-            MakePN('I', []),
-            MakePN('T', [])
-        ]),
-        MakePN('U', [])  
-    ]),
-    MakePN('F', [
-        MakePN('L', [
-            MakePN('O', [])
-        ])
-])])
 
-tree = MakePN('D', [
-    MakePN('I', [
-        MakePN('H', [
-            MakePN('P', []),
-            MakePN('R', []),
-            MakePN('T', [])
-        ]),
-        MakePN('M', [
-            MakePN('T', [])
-        ])
-    ]),
-    MakePN('A', [
-        MakePN('L', []),
-        MakePN('U', []),
-        MakePN('W', [])
-    ])
-])
-
-print(IsMemberNTree("D",tree))
-
-
-print(IsMemberNTree('G', pohon))  # Output: False
-print(IsMemberNTree('X', pohon))  # Output: False
